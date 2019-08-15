@@ -2,15 +2,39 @@ import React, {Component} from 'react';
 
 import TaskItem from './TaskItem';
 class TaskList extends Component{
+
+    constructor(props){
+        super(props);
+        this.state = {
+            filterName : '',
+            filterStatus : -1
+        }
+    }
+
+    onChange = (event) => {
+        let target = event.target;
+        let name = target.name;
+        let value = target.value;
+        this.props.onFilter(
+            name === 'filterName' ? value : this.state.filterName,
+            name === 'filterStatus' ? value : this.state.filterStatus,
+        )
+        this.setState({
+            [name] : value
+        });
+    }
  
     render(){
-        var { tasks } = this.props;
-        var elmTasks = tasks.map((task, index) => {
+        let { tasks } = this.props;
+        let { filterName, filterStatus } = this.state
+        let elmTasks = tasks.map((task, index) => {
             return <TaskItem 
                         key={task.id}
                         index={index}
                         task = {task}
-                        
+                        onUpdateStatus = {this.props.onUpdateStatus}
+                        onDelete = {this.props.onDelete}
+                        onUpdate = {this.props.onUpdate}
                     />
         });
         return(
@@ -30,13 +54,17 @@ class TaskList extends Component{
                             <input 
                             type="text" 
                             name="filterName" 
-                            className="form-control" 
+                            className="form-control"
+                            value={ filterName } 
+                            onChange={this.onChange}
                             />
                         </td>
                         <td>
                             <select 
                                 name="filterStatus" 
                                 className="form-control"
+                                value={ filterStatus } 
+                                onChange={this.onChange}
                             >
                                 <option value={-1}>Tat Ca</option>
                                 <option value={0}>An</option>

@@ -2,8 +2,27 @@ import React, {Component} from 'react';
 
 
 class Search extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            keyword : ''
+        }
+    }
+    onChange = (event) => {
+        let target = event.target;
+        let name = target.name;
+        let value = target.value;
+        this.setState({
+            [name] : value
+        });
+    }
+
+    onSearch = () => {
+        console.log(this.state);
+    }
  
     render(){
+        let { keyword } = this.state;
         return(
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <div className="input-group">
@@ -12,9 +31,14 @@ class Search extends Component{
                             name="keyword" 
                             className="form-control" 
                             placeholder="Nhap Tu Khoa......"
+                            value = {keyword}
+                            onChange = {this.onChange}
                         />
                         <span className="input-group-btn">
-                            <button type="button" className="btn btn-primary">
+                            <button type="button" 
+                            className="btn btn-primary"
+                            onclick={this.onSearch}    
+                            >
                                 <span className="fa fa-search mr-5"></span>Search
                             </button>
                         </span>
