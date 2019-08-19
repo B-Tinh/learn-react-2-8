@@ -18,7 +18,7 @@ class Search extends Component{
     }
 
     onSearch = () => {
-        console.log(this.state);
+        this.props.onSearch(this.state.keyword);
     }
  
     render(){
@@ -37,7 +37,7 @@ class Search extends Component{
                         <span className="input-group-btn">
                             <button type="button" 
                             className="btn btn-primary"
-                            onclick={this.onSearch}    
+                            onClick={this.onSearch}    
                             >
                                 <span className="fa fa-search mr-5"></span>Search
                             </button>

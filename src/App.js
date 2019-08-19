@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TaskForm from './components/TaskForm';
-import Control from './components/Control';
+import Control from './components/TaskControl';
 import TaskList from './components/TaskList';
 import './App.css';
 import _ from 'lodash';
@@ -17,7 +17,9 @@ class App extends Component {
                 name: '',
                 status: -1
             },
-            keyword : ''
+            keyword: '',
+            sortBy : 'name',
+            sortValue : 1
         }
     }
 
@@ -168,8 +170,21 @@ class App extends Component {
         });
     }
 
+    onSearch = (keyword) => {
+        this.setState({
+            keyword : keyword
+        });
+    }
+
+    onSort = (sortBy, sortValue) => {
+        this.setState({
+            sortBy : sortBy,
+            sortValue : sortValue
+        });
+    }
+
     render() {
-        let { tasks, isDisplayForm, taskEditing, filter } = this.state;
+        let { tasks, isDisplayForm, taskEditing, filter, keyword, sortBy, sortValue } = this.state;
         if (filter) {
             if (filter.name) {
                 tasks = tasks.filter((task) => {
@@ -184,6 +199,32 @@ class App extends Component {
                 }
             });
 
+        }
+        if (keyword) {
+            tasks = tasks.filter((task) => {
+                return task.name.toLowerCase().indexOf(keyword) !== -1;
+            });
+        }
+
+        if(sortBy === 'name'){
+            tasks.sort((a, b) => {
+                if(a.name > b.name){
+                    return sortValue;
+                }else if(a.name < b.name){
+                    return -sortValue;
+                }
+                else return 0;
+            });
+        }else{
+            tasks.sort((a, b) => {
+                if(a.status > b.status){
+                    return -sortValue;
+                }else if(a.status < b.status){
+                    return sortValue;
+
+                }
+                else return 0;
+            });
         }
         let elmTaskForm = isDisplayForm ?
             <TaskForm
@@ -218,8 +259,11 @@ class App extends Component {
                             Generate Data
                         </button>
                         {/* Search - Sort */}
-                        <Control 
+                        <Control
                             onSearch={this.onSearch}
+                            onSort={this.onSort}
+                            sortBy={sortBy}
+                            sortValue={sortValue}
                         />
                         {/* List */}
                         <div className="row mt-15">
